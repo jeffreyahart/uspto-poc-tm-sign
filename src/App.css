@@ -13,6 +13,24 @@
   }
 }
 
+fieldset {
+  background-color: #3e444e;
+  padding: 20px;
+  margin: 20px;
+  width: 350px;
+  text-align: left;
+}
+
+legend {
+  text-align: left;
+  font-weight: 600;
+  color: whitesmoke;
+}
+
+fieldset label {
+  text-align: left;
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
