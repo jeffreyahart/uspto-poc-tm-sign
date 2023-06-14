@@ -9,10 +9,7 @@ const adobeAgreement: any = {
             "libraryDocumentId": "CBJCHBCAABAA2clPzA6YD3Zwn1jUgVIo9--GIZCvUVUy"
         }
     ],
-    "name": "Test Agreement",
-    "participantSetsInfo": [
-
-    ],
+    "name": "Sample USPTO Agreement",
     "signatureType": "ESIGN",
     "message": "Please sign this form for testing purposes.",
     "reminderFrequency": "DAILY_UNTIL_SIGNED",
@@ -29,18 +26,25 @@ const getOptions = {
     headers: fetchHeaders
 }
 
-export interface SignPoCProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-
+interface Event {
+    id: string,
+    date: string,
+    description: String
 }
+
+export interface SignPoCProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> { }
 
 export const SignPoC: React.FC<SignPoCProps> = ({ ...props }) => {
     const [status, setStatus] = useState("IN_PROCESS");
     const [aId, setAId] = useState("");
     const [docId, setDocId] = useState("");
     const [busy, setBusy] = useState(false);
-    const [sName, setSName] = useState("");
     const [sEmail, setSEmail] = useState("");
     const [pEmail, setPEmail] = useState("");
+    const [s2Email, setS2Email] = useState("");
+    const [auth, setAuth] = useState("NONE");
+    const [auth2, setAuth2] = useState("NONE");
+    const [events, setEvents]: [Event[], Function] = useState([]);
 
     // Download the current agreement PDF
     const getDocument = useCallback(async () => {
@@ -54,7 +58,7 @@ export const SignPoC: React.FC<SignPoCProps> = ({ ...props }) => {
             link.download = `Test Agreement [${status}].pdf`;
             link.click();
         } else {
-            alert("Error retrieving document. Check log for details.");
+            alert("Error retrieving document. Check console for details.");
         }
     }, [aId, docId, status])
 
@@ -91,6 +95,13 @@ export const SignPoC: React.FC<SignPoCProps> = ({ ...props }) => {
                     if (stat === "SIGNED")
                         clearInterval(interval);
                 });
+
+            fetch(`${agreementApiEndpoint}/${id}/events`, getOptions)
+                .then(response => {
+                    return response.json()
+                }).then(data => {
+                    setEvents(data?.events || []);
+                });
         }, 5000);
     }, []);
 
@@ -103,12 +114,29 @@ export const SignPoC: React.FC<SignPoCProps> = ({ ...props }) => {
                 "role": "SIGNER",
                 "memberInfos": [
                     {
-                        "name": sName,
-                        "email": sEmail
+                        "email": sEmail,
+                        "securityOption": {
+                            "authenticationMethod": auth
+                        }
                     }
                 ]
             }
         ]
+
+        if (s2Email) {
+            agreement.participantSetsInfo.push({
+                "order": 2,
+                "role": "SIGNER",
+                "memberInfos": [
+                    {
+                        "email": s2Email,
+                        "securityOption": {
+                            "authenticationMethod": auth2
+                        }
+                    }
+                ]
+            })
+        }
 
         if (pEmail) {
             agreement.ccs = [
@@ -133,14 +161,14 @@ export const SignPoC: React.FC<SignPoCProps> = ({ ...props }) => {
             setAId(result?.id);
             waitForSign(result?.id);
         } else {
-            alert("Error sending. Check log for details.");
+            alert("Error sending. Check console for details.");
             setBusy(false);
         }
-    }, [waitForSign, sName, sEmail, pEmail]);
+    }, [waitForSign, sEmail, pEmail, auth, s2Email, auth2]);
 
     return (
         <div {...props} className='App-header'>
-            <h1 style={{ margin: 20 }}>Adobe Sign Proof of Concept</h1>
+            <h1 style={{ margin: 20 }}>Adobe Acrobat Sign Proof of Concept</h1>
             {
                 busy &&
                 <div>
@@ -148,46 +176,87 @@ export const SignPoC: React.FC<SignPoCProps> = ({ ...props }) => {
                     <h3 style={{ color: 'lightblue' }}>{status}</h3>
                     {
                         docId &&
-                        <Button
-                            variant="success"
-                            style={{ margin: 20 }}
-                            onClick={getDocument}
-                        >
-                            Download Agreement
-                        </Button>
+                        <>
+                            <Button
+                                variant="success"
+                                style={{ margin: 20 }}
+                                onClick={getDocument}
+                            >
+                                Download Agreement
+                            </Button>
+                        </>
                     }
+                    <fieldset style={{ minWidth: '50vw' }}>
+                        <legend>Activity</legend>
+                        <ol>
+                            {
+                                events.map((event) => {
+                                    const dt = new Date(event.date)
+                                    return (
+                                        <li key={event.id} style={{ marginBottom: 10 }}>
+                                            <span style={{ color: 'lightgray' }}>{dt.toDateString()} {dt.toTimeString()}</span>
+                                            <br />
+                                            {event.description}
+                                        </li>
+                                    )
+                                })
+                            }
+                        </ol>
+                    </fieldset>
                 </div>
             }
             {
                 !busy &&
                 <>
-                    <div style={{ margin: 20 }}>
-                        <fieldset>
-                            <legend>Signer</legend>
-                            <Input
-                                labelText='Name:'
-                                onChange={e => setSName(e.target.value)}
-                            />
-                            <Input
-                                type="email"
-                                labelText='Email:'
-                                onChange={e => setSEmail(e.target.value)}
-                            />
-                        </fieldset>
-                        <fieldset>
-                            <legend>Petitioner</legend>
-                            <Input
-                                type="email"
-                                labelText='Email:'
-                                onChange={e => setPEmail(e.target.value)}
-                            />
-                        </fieldset>
+                    <div style={{ margin: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                        <div className='row'>
+                            <fieldset>
+                                <legend>Applicant 1</legend>
+                                <p style={{ marginTop: -20, color: 'lightgray' }}>Will sign the agreement first</p>
+                                <Input
+                                    type="email"
+                                    labelText='Email'
+                                    onChange={e => setSEmail(e.target.value)}
+                                />
+                                <label htmlFor='authMethod'>Authentication Method</label>
+                                <select id="authMethod" className='form-control' value={auth} onChange={e => setAuth(e.target.value)}>
+                                    <option value="NONE">None (Email Only)</option>
+                                    <option value="KBA">Knowledge-Based (KBA)</option>
+                                </select>
+                            </fieldset>
+                            <fieldset>
+                                <legend>Applicant 2 (Optional)</legend>
+                                <p style={{ marginTop: -20, color: 'lightgray' }}>Will sign the agreement after Applicant 1</p>
+                                <Input
+                                    type="email"
+                                    labelText='Email'
+                                    onChange={e => setS2Email(e.target.value)}
+                                />
+                                <label htmlFor='authMethod'>Authentication Method</label>
+                                <select id="authMethod" className='form-control' value={auth} onChange={e => setAuth2(e.target.value)}>
+                                    <option value="NONE">None (Email Only)</option>
+                                    <option value="KBA">Knowledge-Based (KBA)</option>
+                                </select>
+                            </fieldset>
+                        </div>
+                        <div className="row">
+                            <fieldset>
+                                <legend>Agent / Attorney</legend>
+                                <p style={{ marginTop: -20, color: 'lightgray' }}>Will receive signing notification</p>
+                                <Input
+                                    type="email"
+                                    labelText='Email'
+                                    onChange={e => setPEmail(e.target.value)}
+                                />
+                            </fieldset>
+                        </div>
+                        <Button
+                            onClick={sendAgreement}
+                            style={{ margin: 5 }}
+                        >
+                            Send Agreement
+                        </Button>
                     </div>
-                    <Button
-                        onClick={sendAgreement}
-                    >
-                        Send Agreement
-                    </Button>
                 </>
             }
         </div>
