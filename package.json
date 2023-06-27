@@ -1,5 +1,6 @@
 {
   "name": "uspto-poc-tm-sign",
+  "homepage": "https://jeffreyahart.github.io/uspto-poc-tm-sign/build/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
