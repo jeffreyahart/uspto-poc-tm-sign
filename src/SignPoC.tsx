@@ -211,7 +211,7 @@ export const SignPoC: React.FC<SignPoCProps> = ({ ...props }) => {
                     <div style={{ margin: 10, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <div className='row'>
                             <fieldset>
-                                <legend>Applicant 1</legend>
+                                <legend>Owner / Applicant 1</legend>
                                 <p style={{ marginTop: -20, color: 'lightgray' }}>Will sign the agreement first</p>
                                 <Input
                                     type="email"
@@ -225,7 +225,7 @@ export const SignPoC: React.FC<SignPoCProps> = ({ ...props }) => {
                                 </select>
                             </fieldset>
                             <fieldset>
-                                <legend>Applicant 2 (Optional)</legend>
+                                <legend>Owner / Applicant 2</legend>
                                 <p style={{ marginTop: -20, color: 'lightgray' }}>Will sign the agreement after Applicant 1</p>
                                 <Input
                                     type="email"
@@ -241,7 +241,7 @@ export const SignPoC: React.FC<SignPoCProps> = ({ ...props }) => {
                         </div>
                         <div className="row">
                             <fieldset>
-                                <legend>Agent / Attorney</legend>
+                                <legend>Preparer / Attorney</legend>
                                 <p style={{ marginTop: -20, color: 'lightgray' }}>Will receive signing notification</p>
                                 <Input
                                     type="email"
