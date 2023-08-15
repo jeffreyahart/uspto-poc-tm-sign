@@ -233,7 +233,7 @@ export const SignPoC: React.FC<SignPoCProps> = ({ ...props }) => {
                                     onChange={e => setS2Email(e.target.value)}
                                 />
                                 <label htmlFor='authMethod'>Authentication Method</label>
-                                <select id="authMethod" className='form-control' value={auth} onChange={e => setAuth2(e.target.value)}>
+                                <select id="authMethod" className='form-control' value={auth2} onChange={e => setAuth2(e.target.value)}>
                                     <option value="NONE">None (Email Only)</option>
                                     <option value="KBA">Knowledge-Based (KBA)</option>
                                 </select>
