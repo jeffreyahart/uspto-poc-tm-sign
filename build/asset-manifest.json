@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/uspto-poc-tm-sign/build/static/css/main.a082a2e7.css",
-    "main.js": "/uspto-poc-tm-sign/build/static/js/main.8c6a6e34.js",
+    "main.js": "/uspto-poc-tm-sign/build/static/js/main.c0b1dc9a.js",
     "static/js/787.a5435739.chunk.js": "/uspto-poc-tm-sign/build/static/js/787.a5435739.chunk.js",
     "static/media/MaterialIcons-Regular.eot": "/uspto-poc-tm-sign/build/static/media/MaterialIcons-Regular.4674f8ded773cb03e824.eot",
     "static/media/MaterialIcons-Regular.ttf": "/uspto-poc-tm-sign/build/static/media/MaterialIcons-Regular.9348390b022941f2a62f.ttf",
@@ -161,11 +161,11 @@
     "static/media/uspto-icons.ttf?a38xwg": "/uspto-poc-tm-sign/build/static/media/uspto-icons.6dfd8996b4eccbc86218.ttf",
     "index.html": "/uspto-poc-tm-sign/build/index.html",
     "main.a082a2e7.css.map": "/uspto-poc-tm-sign/build/static/css/main.a082a2e7.css.map",
-    "main.8c6a6e34.js.map": "/uspto-poc-tm-sign/build/static/js/main.8c6a6e34.js.map",
+    "main.c0b1dc9a.js.map": "/uspto-poc-tm-sign/build/static/js/main.c0b1dc9a.js.map",
     "787.a5435739.chunk.js.map": "/uspto-poc-tm-sign/build/static/js/787.a5435739.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.a082a2e7.css",
-    "static/js/main.8c6a6e34.js"
+    "static/js/main.c0b1dc9a.js"
   ]
 }
